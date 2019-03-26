@@ -11,6 +11,9 @@ import {
   Platform,
   processColor,
 } from 'react-native';
+import ViewPagerAndroid from '@react-native-community/viewpager';
+import Slider from '@react-native-community/slider';
+
 import PropTypes from 'prop-types';
 
 import createHandler from './createHandler';
@@ -353,8 +356,6 @@ function createNativeWrapper(Component, config = {}) {
       ...Component.propTypes,
     };
 
-    static displayName = Component.displayName || "ComponentWrapper";
-
     _refHandler = node => {
       // bind native component's methods
       let source = node;
@@ -403,6 +404,11 @@ function createNativeWrapper(Component, config = {}) {
 const WrappedScrollView = createNativeWrapper(ScrollView, {
   disallowInterruption: true,
 });
+const WrappedSlider = createNativeWrapper(Slider, {
+  shouldCancelWhenOutside: false,
+  shouldActivateOnStart: true,
+  disallowInterruption: true,
+});
 const WrappedSwitch = createNativeWrapper(Switch, {
   shouldCancelWhenOutside: false,
   shouldActivateOnStart: true,
@@ -411,6 +417,9 @@ const WrappedSwitch = createNativeWrapper(Switch, {
 const WrappedTextInput = createNativeWrapper(TextInput);
 
 const WrappedToolbarAndroid = createNativeWrapper(ToolbarAndroid);
+const WrappedViewPagerAndroid = createNativeWrapper(ViewPagerAndroid, {
+  disallowInterruption: true,
+});
 const WrappedDrawerLayoutAndroid = createNativeWrapper(DrawerLayoutAndroid, {
   disallowInterruption: true,
 });
@@ -584,19 +593,20 @@ class BorderlessButton extends React.Component {
 
 /* Other */
 
-const FlatListWithGHScroll = React.forwardRef((props, ref) => (
+const FlatListWithGHScroll = props => (
   <FlatList
-    ref={ref}
     {...props}
-    renderScrollComponent={scrollProps => <WrappedScrollView {...scrollProps} />}
+    renderScrollComponent={props => <WrappedScrollView {...props} />}
   />
-));
+);
 
 export {
   WrappedScrollView as ScrollView,
+  WrappedSlider as Slider,
   WrappedSwitch as Switch,
   WrappedTextInput as TextInput,
   WrappedToolbarAndroid as ToolbarAndroid,
+  WrappedViewPagerAndroid as ViewPagerAndroid,
   WrappedDrawerLayoutAndroid as DrawerLayoutAndroid,
   NativeViewGestureHandler,
   TapGestureHandler,
@@ -615,7 +625,5 @@ export {
   /* Other */
   FlatListWithGHScroll as FlatList,
   gestureHandlerRootHOC,
-  GestureHandlerButton as PureNativeButton,
   Directions,
-  createNativeWrapper,
 };
